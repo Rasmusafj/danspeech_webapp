@@ -128,36 +128,38 @@ function createPlayer(event) {
 
 $('#submitAudio').on('click', function(){
 
-
-
-    var myFile = new File([player.recordedData], 'audio.webm');
-    var url = "{% url 'save' %}";
-    var data = new FormData();
-    data.append('recorded_audio', myFile);
-    data.append('transcription', current_trans);
-    data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
-    $.ajax({
-        url: url,
-        method: 'post',
-        data: data,
-        success: function(data){
-            if(data.success){
-                alert("Sucess! Thanks for contributing. Feel free to send more recordings!");
-                if (transcriptions.length === 0){
-                    alert("You completed 100 recordings! We love you.")
-                }else {
-                    current_trans = transcriptions.pop();
-                    $('#transcription').text(current_trans);
+    if(!accepted_legal){
+        modal.style.display = "block";
+    } else {
+        var myFile = new File([player.recordedData], 'audio.webm');
+        var url = "{% url 'save' %}";
+        var data = new FormData();
+        data.append('recorded_audio', myFile);
+        data.append('transcription', current_trans);
+        data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
+        $.ajax({
+            url: url,
+            method: 'post',
+            data: data,
+            success: function(data){
+                if(data.success){
+                    alert("Sucess! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
+                    if (transcriptions.length === 0){
+                        alert("You completed 100 recordings! We love you.")
+                    }else {
+                        current_trans = transcriptions.pop();
+                        $('#transcription').text(current_trans);
+                    }
                 }
-            }
-        },
-        error: function() {
-            alert("Something went wrong! Please try again later.");
-        },
-        cache: false,
-        contentType: false,
-        processData: false
-    });
+            },
+            error: function() {
+                alert("Something went wrong! Please try again later.");
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
 });
 
 
@@ -186,4 +188,9 @@ window.onclick = function(event) {
 
 function resetpage() {
     modal.style.display = "none";
+    if ($("#accept").prop("checked")){
+        accepted_legal = true;
+    } else {
+        accepted_legal = false;
+    }
 }
