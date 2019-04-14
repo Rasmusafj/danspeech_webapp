@@ -1,0 +1,9 @@
+/audio_files/
+
+.DS_Store
+
+__pycache__/
+
+.idea/
+
+*.sqlite3
