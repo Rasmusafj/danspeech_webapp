@@ -18,10 +18,15 @@ def index(request):
     random.shuffle(transcriptions)
 
     content = {
-        "transcriptions": transcriptions,
+        "transcriptions": transcriptions[:150],
     }
 
     return HttpResponse(template.render(content, request))
+
+
+def requirements(request):
+    template = loader.get_template('requirements.html')
+    return HttpResponse(template.render({}, request))
 
 
 def save_audio(request):

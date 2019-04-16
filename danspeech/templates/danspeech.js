@@ -11,9 +11,8 @@ var player;
 
 var accepted_legal = false;
 
-var use_fluid = screen.width < 800;
 var options = {
-    fluid: use_fluid,
+    fluid: true,
     controls: true,
     width: 600,
     height: 300,
@@ -117,20 +116,35 @@ function createPlayer(event) {
     // user clicked the record button and started recording
     player.on('startRecord', function() {
         console.log('started recording!');
+        $('#record-button').text("Stop ");
     });
     // user completed recording and stream is available
     player.on('finishRecord', function() {
         // the blob object contains the recorded data that
         // can be downloaded by the user, stored on server etc.
         console.log('finished recording: ', player.recordedData);
+        $('#record-button').text("Optag");
     });
 }
 
-$('#submitAudio').on('click', function(){
+$('#record-button').on('click', function(){
 
-    if(!accepted_legal){
-        modal.style.display = "block";
+    if (player.record().isRecording()) {
+        player.record().stop();
     } else {
+        if (!player.record().stream){
+            alert("Tillad først optagelser ved at klikke på mikrofon ikonet i midten af optagervinduet")
+        } else {
+            player.record().start();
+        }
+    }
+});
+
+function submitRecording(){
+    if (player.record().getDuration() === 0){
+        alert("Du skal optage sætningen, før du kan sende den ind.")
+    } else {
+        var mobile_screen = screen.width < 800;
         var myFile = new File([player.recordedData], 'audio.webm');
         var url = "{% url 'save' %}";
         var data = new FormData();
@@ -143,9 +157,15 @@ $('#submitAudio').on('click', function(){
             data: data,
             success: function(data){
                 if(data.success){
-                    alert("Sucess! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
+                    if (mobile_screen) {
+                        alert("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
+                    } else {
+                        $("#tekst-beskrivelse").text("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
+
+                    }
+
                     if (transcriptions.length === 0){
-                        alert("You completed 100 recordings! We love you.")
+                        alert("Du har optaget flere end hundrede optagelser. Du er en stjerne!")
                     }else {
                         current_trans = transcriptions.pop();
                         $('#transcription').text(current_trans);
@@ -153,18 +173,17 @@ $('#submitAudio').on('click', function(){
                 }
             },
             error: function() {
-                alert("Something went wrong! Please try again later.");
+                alert("Der gik desværre noget galt. Prøv venligst igen senere.");
             },
             cache: false,
             contentType: false,
             processData: false
         });
     }
-});
+}
 
 
 var modal = document.getElementById('myModal');
-
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
@@ -185,11 +204,23 @@ window.onclick = function(event) {
   }
 };
 
+$('#submitAudio').on('click', function(){
+    if(!accepted_legal){
+        modal.style.display = "block";
+    } else {
+        submitRecording();
+    }
+});
+
+
 
 function resetpage() {
     modal.style.display = "none";
     if ($("#accept").prop("checked")){
         accepted_legal = true;
+        if (player.record().getDuration() !== 0){
+            submitRecording();
+        }
     } else {
         accepted_legal = false;
     }

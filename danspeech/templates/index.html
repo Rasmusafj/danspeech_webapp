@@ -36,7 +36,7 @@
     .modal {
       display: none; /* Hidden by default */
       position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
+      z-index: 9999; /* Sit on top */
       padding-top: 100px; /* Location of the box */
       left: 0;
       top: 0;
@@ -85,7 +85,7 @@
 </head>
 <body>
     <main class="wrapper">
-        <nav class="navigation">
+        <nav class="navigation" style="z-index: 999">
 				<section class="container">
 					<a class="navigation-title" href="#home">
 						<h1 class="title">DanSpeech</h1>
@@ -106,8 +106,14 @@
                     DanSpeech
                 </h1>
                 <p class="description">
-                    Hjælp os med at indsamle data!
+                    I forbindelse med et Kandidat speciale på Danmarks Tekniske Universitet forsøger vi at lave et
+                    open-source toolkit til dansk talegenkendelse (DanSpeech). Vi har brug
+                    for din hjælp til at indsamle et eksternt datasæt, der skal bruges til at evaluere DanSpeech.
+                    Det tager ikke lang tid at bidrage, og du får mulighed for at hjælpe et spændende projekt på vej.
                 </p>
+
+                <p><a href="#info"> Læs mere om projektet </a></p>
+                <p><a href="#recording"> Start med at bidrage </a></p>
             </section>
 
         </header>
@@ -120,15 +126,21 @@
             <h1>Legal Requirements</h1>
             <p>
                 For at vi kan indsamle data, så er du nød til at være indforstået med selve indsamlings processen.
-
+            </p>
+            <p>
+                <a href="/requirements/">
+                    Læs alle gældende vilkår
+                </a>
+            </p>
+            <p>
                 Det eneste vi gemmer er selve lydklippet, som du optager, samt den sætning du har optaget. Vi gemmer dine
                 optagelser med det formål, at kunne evaluere vores tale-til-tekst toolkit. Vi distribuerer ikke dine optagelser
                 til tredje parter.
             </p>
             <p>
-                <b>BEMÆRK: Vores web app er under udvikling og på nuværende tidspunkt gemmer vi derfor ikke noget data.</b>
+                <b>BEMÆRK: Vores web app er under udvikling, men vi gemmer stadig din data, hvis du bidrager til projektet.</b>
             </p>
-            <p> Jeg er fuldt ud indforstået med ovenstående. <input type="checkbox" id="accept" value="accepted"></p>
+            <p> Jeg er fuldt ud indforstået med <a href="/requirements/">alle gældende vilkår</a>. <input type="checkbox" id="accept" value="accepted"></p>
 
             <button onclick="resetpage()">Submit</button>
         </div>
@@ -136,10 +148,10 @@
         </div>
         <section class="container" id="recording">
             <h1>
-                Data opsamling
+                Data indsamling
             </h1>
-            <p>
-                    Optag følgende sætning:
+            <p id="tekst-beskrivelse">
+                    Optag nedenstående sætning. Når du er tilfreds med dit resultat, så trykker du på "send optagelse" knappen.
             </p>
             <blockquote>
                 <p>
@@ -157,7 +169,8 @@
             -->
             <audio id="myAudio" class="video-js vjs-default-skin center"></audio>
             </br>
-            <input id="submitAudio" class="button-primary" type="submit" value="Send optagelse">
+            <button id="record-button" class="button">Optag</button>
+            <input id="submitAudio" class="button" type="submit" value="Send optagelse">
 
         </section>
 
