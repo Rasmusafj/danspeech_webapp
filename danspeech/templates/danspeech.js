@@ -8,6 +8,80 @@ var current_trans = transcriptions.pop();
 $('#transcription').text(current_trans);
 
 var player;
+var recorder;
+var microphone;
+var blob;
+var audio = document.getElementById('safariAudio');
+
+function captureMicrophone(callback) {
+    if(microphone) {
+        callback(microphone);
+        return;
+    }
+    if(typeof navigator.mediaDevices === 'undefined' || !navigator.mediaDevices.getUserMedia) {
+        alert('This browser does not supports WebRTC getUserMedia API.');
+        if(!!navigator.getUserMedia) {
+            alert('This browser seems supporting deprecated getUserMedia API.');
+        }
+    }
+    navigator.mediaDevices.getUserMedia({
+        audio: isEdge ? true : {
+            echoCancellation: false
+        }
+    }).then(function(mic) {
+        callback(mic);
+    }).catch(function(error) {
+        alert('Unable to capture your microphone. Please check console logs.');
+        console.error(error);
+    });
+}
+function replaceAudio(src) {
+    var newAudio = document.createElement('audio');
+    var parentNode = audio.parentNode;
+    parentNode.removeChild(audio);
+    newAudio.id = "safariAudio";
+    newAudio.controls = true;
+    newAudio.autoplay = false;
+    if(src) {
+        newAudio.src = src;
+    }
+    parentNode.innerHTML = '';
+    parentNode.appendChild(newAudio);
+
+    audio = newAudio;
+}
+
+function releaseMicrophone() {
+    if(microphone) {
+        microphone.stop();
+        microphone = null;
+    }
+}
+
+function stopRecordingCallback() {
+    replaceAudio(URL.createObjectURL(recorder.getBlob()));
+    blob = null;
+    blob = recorder.getBlob();
+    setTimeout(function() {
+        if(!audio.paused) return;
+        setTimeout(function() {
+            if(!audio.paused) return;
+            audio.play();
+        }, 1000);
+
+        audio.play();
+    }, 300);
+    audio.play();
+
+    releaseMicrophone();
+}
+
+function click(el) {
+    el.disabled = false; // make sure that element is not disabled
+    var evt = document.createEvent('Event');
+    evt.initEvent('click', true, true);
+    el.dispatchEvent(evt);
+}
 
 var accepted_legal = false;
 
@@ -44,58 +118,13 @@ var options = {
 // apply audio workarounds for certain browsers
 // applyAudioWorkaround();
 
-if (isSafari) {
-    addStartButton();
-    var audio = document.querySelector('audio');
-
-    function captureMicrophone(callback) {
-        navigator.mediaDevices.getUserMedia({audio: true}).then(callback).catch(function(error) {
-            alert('Unable to access your microphone.');
-            console.error(error);
-        });
-    }
-
-    function stopRecordingCallback() {
-        audio.srcObject = null;
-        var blob = recorder.getBlob();
-        audio.src = URL.createObjectURL(blob);
-        recorder.microphone.stop();
-    }
-
-    document.getElementById('btn-start-recording').onclick = function() {
-        this.disabled = true;
-        captureMicrophone(function(microphone) {
-            audio.srcObject = microphone;
-            recorder = RecordRTC(microphone, {
-                type: 'audio',
-                recorderType: StereoAudioRecorder,
-                desiredSampRate: 16000
-            });
-            recorder.startRecording();
-            // release microphone on stopRecording
-            recorder.microphone = microphone;
-            document.getElementById('btn-stop-recording').disabled = false;
-        });
-    };
-    document.getElementById('btn-stop-recording').onclick = function() {
-        this.disabled = true;
-        recorder.stopRecording(stopRecordingCallback);
-    };
-} else {
+if (!isSafari) {
     // other browsers
     createPlayer();
 }
-function createPlayer(event) {
-    // create player
-    if (isSafari) {
-        if (event) {
-            // hide start button on safari
-            event.target.style.display = 'none';
-        }
-        updateContext(options);
-    } else {
 
-    }
+function createPlayer(event) {
+
     player = videojs('myAudio', options, function() {
         // print version information at startup
         var msg = 'Using video.js ' + videojs.VERSION +
@@ -128,27 +157,88 @@ function createPlayer(event) {
 }
 
 $('#record-button').on('click', function(){
+    if(isSafari){
+        if (typeof recorder === 'undefined' || recorder.getState() === "stopped") {
+            if (!microphone) {
+                captureMicrophone(function(mic) {
+                    microphone = mic;
 
-    if (player.record().isRecording()) {
-        player.record().stop();
-    } else {
-        if (!player.record().stream){
-            alert("Tillad først optagelser ved at klikke på mikrofon ikonet i midten af optagervinduet")
+                    replaceAudio();
+
+                    audio.muted = true;
+                    audio.srcObject = microphone;
+
+                    alert('Venligst klik optag igen. Første klik gav adgang til mikrofonen.');
+                    return;
+                });
+                return;
+            }
+            replaceAudio();
+
+            audio.muted = true;
+            audio.srcObject = microphone;
+
+            var options = {
+                type: 'audio',
+                numberOfAudioChannels: 2,
+                checkForInactiveTracks: true,
+                desiredSampRate: 22050,
+                recorderType: StereoAudioRecorder
+            };
+
+            if(!recorder) {
+                recorder = RecordRTC(microphone, options);
+            } else {
+                console.log("Restarting");
+                recorder.clearRecordedData();
+                recorder.reset();
+            }
+
+            recorder.startRecording();
+            $('#record-button').text("Stop ");
+
         } else {
-            player.record().start();
+            recorder.stopRecording(stopRecordingCallback);
+            $('#record-button').text("Optag ");
+        }
+    } else {
+        if (player.record().isRecording()) {
+            player.record().stop();
+        } else {
+            if (!player.record().stream){
+                alert("Tillad først optagelser ved at klikke på mikrofon ikonet i midten af optagervinduet")
+            } else {
+                player.record().start();
+            }
         }
     }
 });
 
 function submitRecording(){
-    if (player.record().getDuration() === 0){
+    var hasRecorded = false;
+    if (isSafari){
+        if (typeof recorder !== "undefined"){
+            hasRecorded = true;
+        }
+    } else {
+        if (player.record().getDuration() === 0){
+            hasRecorded = true;
+        }
+    }
+    if (!hasRecorded){
         alert("Du skal optage sætningen, før du kan sende den ind.")
     } else {
         var mobile_screen = screen.width < 800;
-        var myFile = new File([player.recordedData], 'audio.webm');
+        if (isSafari){
+            var myFile = new File([blob], 'audio.webm');
+        } else {
+            var myFile = new File([player.recordedData], 'audio.webm');
+        }
+
         var url = "{% url 'save' %}";
         var data = new FormData();
         data.append('recorded_audio', myFile);
+
         data.append('transcription', current_trans);
         data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
         $.ajax({
@@ -161,7 +251,6 @@ function submitRecording(){
                         alert("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
                     } else {
                         $("#tekst-beskrivelse").text("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
-
                     }
 
                     if (transcriptions.length === 0){
@@ -212,15 +301,24 @@ $('#submitAudio').on('click', function(){
     }
 });
 
-
+if (!isSafari){
+    $('#safariAudio').hide();
+}
 
 function resetpage() {
     modal.style.display = "none";
     if ($("#accept").prop("checked")){
         accepted_legal = true;
-        if (player.record().getDuration() !== 0){
-            submitRecording();
+        if (isSafari) {
+            if (typeof recorder !== "undefined"){
+                submitRecording();
+            }
+        } else {
+            if (player.record().getDuration() !== 0){
+                submitRecording();
+            }
         }
+
     } else {
         accepted_legal = false;
     }

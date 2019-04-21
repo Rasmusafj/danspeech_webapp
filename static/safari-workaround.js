@@ -2,15 +2,6 @@
 
 var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-function addStartButton() {
-    var btn = document.createElement('BUTTON');
-    var t = document.createTextNode('Show Recording window');
-    //btn.onclick = createPlayer;
-    btn.appendChild(t);
-    document.getElementById("recording").appendChild(btn);
-
-}
-
 function updateContext(opts) {
     // Safari 11 or newer automatically suspends new AudioContext's that aren't
     // created in response to a user-gesture, like a click or tap, so create one
