@@ -219,7 +219,7 @@ function submitRecording(){
             hasRecorded = true;
         }
     } else {
-        if (player.record().getDuration() === 0){
+        if (player.record().getDuration() !== 0){
             hasRecorded = true;
         }
     }
