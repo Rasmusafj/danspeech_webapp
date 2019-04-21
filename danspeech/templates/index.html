@@ -31,7 +31,10 @@
     <script src="{% static 'videojs.record.min.js' %}"></script>
 
     <style>
-
+    input[type="checkbox"]{
+        width: 16px; /*Desired width*/
+        height: 16px; /*Desired height*/
+    }
     /* The Modal (background) */
     .modal {
       display: none; /* Hidden by default */
@@ -140,7 +143,7 @@
             <p>
                 <b>BEMÆRK: Vores web app er under udvikling, men vi gemmer stadig din data, hvis du bidrager til projektet.</b>
             </p>
-            <p> Jeg er fuldt ud indforstået med <a href="/requirements/">alle gældende vilkår</a>. <input type="checkbox" id="accept" value="accepted"></p>
+            <p> <input type="checkbox" id="accept" value="accepted"> Jeg er fuldt ud indforstået med <a href="/requirements/">alle gældende vilkår</a>.</p>
 
             <button onclick="resetpage()">Submit</button>
         </div>
