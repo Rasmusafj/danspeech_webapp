@@ -92,6 +92,7 @@ var options = {
     height: 300,
     controlBar: {
         fullscreenToggle: false,
+        recordToggle: false
     },
     plugins: {
         wavesurfer: {
@@ -152,7 +153,7 @@ function createPlayer(event) {
         // the blob object contains the recorded data that
         // can be downloaded by the user, stored on server etc.
         console.log('finished recording: ', player.recordedData);
-        $('#record-button').text("Optag");
+        $('#record-button').text("Ny Optagelse");
     });
 }
 
@@ -245,12 +246,7 @@ function submitRecording(){
             data: data,
             success: function(data){
                 if(data.success){
-                    if (mobile_screen) {
-                        alert("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
-                    } else {
-                        $("#tekst-beskrivelse").text("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
-                    }
-
+                    alert("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
                     if (transcriptions.length === 0){
                         alert("Du har optaget flere end hundrede optagelser. Du er en stjerne!")
                     }else {
