@@ -186,13 +186,11 @@ $('#record-button').on('click', function(){
                 recorderType: StereoAudioRecorder
             };
 
-            if(!recorder) {
-                recorder = RecordRTC(microphone, options);
-            } else {
-                console.log("Restarting");
-                recorder.clearRecordedData();
-                recorder.reset();
+            if(recorder) {
+                recorder.destroy();
+                recorder = null;
             }
+            recorder = RecordRTC(microphone, options);
 
             recorder.startRecording();
             $('#record-button').text("Stop ");
