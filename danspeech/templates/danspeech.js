@@ -153,7 +153,7 @@ function createPlayer(event) {
         // the blob object contains the recorded data that
         // can be downloaded by the user, stored on server etc.
         console.log('finished recording: ', player.recordedData);
-        $('#record-button').text("Ny Optagelse");
+        $('#record-button').text("Ny optagelse");
     });
 }
 
@@ -198,7 +198,7 @@ $('#record-button').on('click', function(){
 
         } else {
             recorder.stopRecording(stopRecordingCallback);
-            $('#record-button').text("Optag ");
+            $('#record-button').text("Ny optagelse ");
         }
     } else {
         if (player.record().isRecording()) {
