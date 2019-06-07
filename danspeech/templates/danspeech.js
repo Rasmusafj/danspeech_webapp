@@ -297,6 +297,8 @@ $('#submitAudio').on('click', function(){
 
 if (!isSafari){
     $('#safariAudio').hide();
+} else {
+    $('#safari-text').text("Vi kan se at du bruger Safari. For en bedre oplevelse, så kan du skifte til chrome.");
 }
 
 function resetpage() {
@@ -317,3 +319,4 @@ function resetpage() {
         accepted_legal = false;
     }
 }
+
