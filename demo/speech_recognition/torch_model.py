@@ -144,7 +144,7 @@ class Lookahead(nn.Module):
 class DanSpeech(nn.Module):
     def __init__(self, rnn_type=nn.LSTM, labels="abc", rnn_hidden_size=768, nb_layers=5, audio_conf=None,
                  bidirectional=True, context=20):
-        super(DeepSpeech, self).__init__()
+        super(DanSpeech, self).__init__()
 
         # model metadata needed for serialization/deserialization
         if audio_conf is None:

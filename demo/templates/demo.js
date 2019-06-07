@@ -88,7 +88,23 @@ $('#submitAudio').on('click', function(){
 });
 
 function transcribe() {
-    alert("Not implemented yet...");
+    var url = "{% url 'transcribe' %}";
+        data = new FormData();
+        data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
+        $.ajax({
+            url: url,
+            method: 'post',
+            data: data,
+            success: function(data){
+                $("#transcription").text(data.trans)
+            },
+            error: function() {
+                alert("Der gik desværre noget galt. Prøv venligst igen.");
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
 }
 
 
@@ -111,7 +127,6 @@ function sendAudio(){
             method: 'post',
             data: data,
             success: function(data){
-
             },
             error: function() {
                 alert("Der gik desværre noget galt. Prøv venligst igen.");

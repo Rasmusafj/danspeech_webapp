@@ -7,6 +7,9 @@ import os
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
+from .speech_recognition.danspeech_demo import DanSpeechDemo
+
+danspeech_model = DanSpeechDemo()
 
 def index(request):
     template = loader.get_template('demo_index.html')
@@ -40,6 +43,11 @@ def update_config(request):
 
 
 def transcribe(request):
+    #print("WHY???")
+    #danspeech_model = DanSpeechDemo()
+    transcription = danspeech_model.transcribe()
+
     return JsonResponse({
         'success': True,
+        'trans': transcription
     })
