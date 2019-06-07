@@ -94,6 +94,9 @@
 						<h1 class="title">DanSpeech</h1>
 					</a>
 					<ul class="navigation-list float-right">
+                        <li class="navigation-item">
+							<a class="navigation-link" href="/" data-popover>Home</a>
+						</li>
 						<li class="navigation-item">
 							<a class="navigation-link" href="#info" data-popover>Info</a>
 						</li>
@@ -115,42 +118,17 @@
                     Det tager ikke lang tid at bidrage, og du får mulighed for at hjælpe et spændende projekt på vej.
                 </p>
 
-                <p><a href="#info"> Læs mere om projektet </a></p>
-                <p><a href="#recording"> Start med at bidrage </a></p>
+                <a href="/" class="button">Bidrag</a>
+
             </section>
 
         </header>
-
-        <div id="myModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h1>Gældende vilkår</h1>
-            <p>
-                For at vi kan indsamle data, så er du nød til at være indforstået med selve indsamlings processen.
-            </p>
-            <p>
-                <a href="/requirements/">
-                    Læs alle gældende vilkår
-                </a>
-            </p>
-            <p>
-                Det eneste vi gemmer er selve lydklippet, som du optager, samt den sætning du har optaget. Vi gemmer dine
-                optagelser med det formål, at kunne evaluere vores tale-til-tekst toolkit.
-            </p>
-            <p> <input type="checkbox" id="accept" value="accepted"> Jeg er fuldt ud indforstået med <a href="/requirements/">alle gældende vilkår</a>.</p>
-
-            <button onclick="resetpage()">Submit</button>
-        </div>
-
-        </div>
         <section class="container" id="recording">
             <h1>
-                Data indsamling
+                Demo
             </h1>
             <p id="tekst-beskrivelse">
-                    Optag nedenstående sætning. Når du er tilfreds med din optagelse, så trykker du på "send optagelse" knappen.
+                    Vælg din yndlings configuration
             </p>
             <p id="safari-text" style="font-weight: bold;">
 
@@ -162,18 +140,12 @@
                     </strong>
                 </p>
             </blockquote>
-
-
-
-            <div><audio id="safariAudio"controls autoplay playsinline></audio></div>
-
             <audio id="myAudio" class="video-js vjs-default-skin center"></audio>
             </br>
             <button id="record-button" class="button">Ny optagelse</button>
             <input id="submitAudio" class="button" type="submit" value="Send optagelse">
 
         </section>
-
         <section class="container" id="info">
             <h1 class="">
                 Info
