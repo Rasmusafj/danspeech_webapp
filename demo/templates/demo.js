@@ -84,28 +84,35 @@ $('#record-button').on('click', function(){
 });
 
 $('#submitAudio').on('click', function(){
-    transcribe();
+    transcribe(false);
 });
 
-function transcribe() {
+function transcribe(use_google) {
     var url = "{% url 'transcribe' %}";
-        data = new FormData();
-        data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
-        $.ajax({
-            url: url,
-            method: 'post',
-            data: data,
-            success: function(data){
-                $("#transcription").text(data.trans)
-            },
-            error: function() {
-                alert("Der gik desværre noget galt. Prøv venligst igen.");
-            },
-            cache: false,
-            contentType: false,
-            processData: false
-        });
+    if (use_google) {
+        url = "{% url 'transcribe_google' %}";
+    }
+    data = new FormData();
+    data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
+    $.ajax({
+        url: url,
+        method: 'post',
+        data: data,
+        success: function(data){
+            $("#transcription").text(data.trans)
+        },
+        error: function() {
+            alert("Der gik desværre noget galt. Prøv venligst igen.");
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
 }
+
+$('#google').on('click', function(){
+    transcribe(true);
+});
 
 
 function sendAudio(){

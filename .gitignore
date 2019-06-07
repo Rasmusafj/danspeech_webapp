@@ -7,6 +7,8 @@ __pycache__/
 
 audio_files/
 
+audio_files/google_key/danspeech_googlekey.json
+
 *.sqlite3
 
 *.webm

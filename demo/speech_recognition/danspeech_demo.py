@@ -2,13 +2,12 @@ import librosa
 import scipy
 import torch
 import os
-import settings
 import numpy as np
 from ._utils import load_audio
 from .decoder import GreedyDecoder, BeamCTCDecoder
 from .torch_model import DanSpeech
 import settings
-
+import speech_recognition as sr
 
 class DanSpeechDemo(object):
     def __init__(self, transcribe_config=None):
@@ -29,7 +28,7 @@ class DanSpeechDemo(object):
         self.labels = self.model.labels
 
         if not transcribe_config:
-            transcribe_config = {"lm": "beam", "alpha": 1.44, "beta": 0.14, "lm_path": "/Volumes/Karens harddisk/lms/final_models_klm/dsl-3gram.klm"}
+            transcribe_config = {"lm": "beam", "alpha": 0.7, "beta": 1.14, "lm_path": "/Volumes/Karens harddisk/lms/final_models_klm/dsl-3gram.klm"}
 
         if transcribe_config.get("lm") == "beam":
             self.decoder = BeamCTCDecoder(labels=self.labels, lm_path=transcribe_config.get("lm_path"),
@@ -63,3 +62,31 @@ class DanSpeechDemo(object):
         out, output_sizes = self.model(recording, input_sizes)
         decoded_output, _ = self.decoder.decode(out, output_sizes)
         return decoded_output[0][0]
+
+
+class GoogleSpeech():
+
+    def __init__(self):
+        google_path = os.path.join(settings.MEDIA_ROOT, "google_key/danspeech_googlekey.json")
+        if os.path.isfile(google_path):
+
+            with open(google_path) as f:
+                self.gc_credentials = f.read()
+        else:
+            self.gc_credentials = None
+
+        self.r = sr.Recognizer()
+
+    def transcribe(self):
+
+        if not self.gc_credentials:
+            return "Google not available"
+
+        example = sr.AudioFile(os.path.join(settings.MEDIA_ROOT, "temp.wav"))
+        with example as source:
+            audio = self.r.record(source)
+
+        transcription = self.r.recognize_google_cloud(audio, language="da-DK",
+                                                      credentials_json=self.gc_credentials)
+
+        return transcription
