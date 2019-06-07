@@ -66,6 +66,7 @@ function createPlayer(event) {
         // can be downloaded by the user, stored on server etc.
         console.log('finished recording: ', player.recordedData);
         $('#record-button').text("Ny optagelse");
+        sendAudio();
     });
 }
 
@@ -82,50 +83,38 @@ $('#record-button').on('click', function(){
 
 });
 
-function submitRecording(){
+$('#submitAudio').on('click', function(){
+    transcribe();
+});
+
+function transcribe() {
+    alert("Not implemented yet...");
+}
+
+
+function sendAudio(){
     var hasRecorded = false;
-    if (isSafari){
-        if (typeof recorder !== "undefined"){
-            hasRecorded = true;
-        }
-    } else {
-        if (player.record().getDuration() !== 0){
-            hasRecorded = true;
-        }
+    if (player.record().getDuration() !== 0){
+        hasRecorded = true;
     }
+
     if (!hasRecorded){
-        alert("Du skal optage sætningen, før du kan sende den ind.")
+        alert("Du skal optage en sætning")
     } else {
-        var mobile_screen = screen.width < 800;
-        if (isSafari){
-            var myFile = new File([blob], 'audio.webm');
-        } else {
-            var myFile = new File([player.recordedData], 'audio.webm');
-        }
-
-        var url = "{% url 'save' %}";
+        var url = "{% url 'preprocess_audio' %}";
         var data = new FormData();
+        var myFile = new File([player.recordedData], 'audio.webm');
         data.append('recorded_audio', myFile);
-
-        data.append('transcription', current_trans);
         data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
         $.ajax({
             url: url,
             method: 'post',
             data: data,
             success: function(data){
-                if(data.success){
-                    alert("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
-                    if (transcriptions.length === 0){
-                        alert("Du har optaget flere end hundrede optagelser. Du er en stjerne!")
-                    }else {
-                        current_trans = transcriptions.pop();
-                        $('#transcription').text(current_trans);
-                    }
-                }
+
             },
             error: function() {
-                alert("Der gik desværre noget galt. Prøv venligst igen senere.");
+                alert("Der gik desværre noget galt. Prøv venligst igen.");
             },
             cache: false,
             contentType: false,
