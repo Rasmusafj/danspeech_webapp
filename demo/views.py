@@ -7,7 +7,7 @@ import os
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
-# Create your views here.
+
 def index(request):
     template = loader.get_template('demo_index.html')
     return HttpResponse(template.render({}, request))
@@ -16,7 +16,7 @@ def index(request):
 def preprocess_webm(request):
     old_file = os.path.join(settings.MEDIA_ROOT, "tmp.webm")
     if os.path.isfile(old_file):
-        os.remove(os.path.join(settings.MEDIA_ROOT, "tmp.webm"))
+        os.remove(old_file)
 
     audio_file = request.FILES.get('recorded_audio')
     path = default_storage.save('tmp.webm', ContentFile(audio_file.read()))
@@ -28,6 +28,15 @@ def preprocess_webm(request):
     return JsonResponse({
         'success': True,
     })
+
+
+def update_config(request):
+    model = request.POST["model_choice"]
+    lm = request.POST["language_model"]
+    alpha = request.POST["alpha"]
+    beta = request.POST["beta"]
+
+    return HttpResponse(status=204)
 
 
 def transcribe(request):

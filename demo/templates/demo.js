@@ -124,3 +124,23 @@ function sendAudio(){
 }
 
 createPlayer();
+
+function changeRangeValueAlpha(val){
+    document.getElementById("myRangeAlpha").value = isNaN(parseFloat(val, 3)) ? 0 : parseFloat(val, 10);
+    showValue1(val);
+}
+
+function changeInputValueAlpha(val){
+    document.getElementById("numberAlpha").value = isNaN(parseFloat(val, 3)) ? 0 : parseFloat(val, 10);
+    showValue1(val);
+}
+
+function changeRangeValueBeta(val){
+    document.getElementById("myRangeBeta").value = isNaN(parseFloat(val, 3)) ? 0 : parseFloat(val, 10);
+    showValue1(val);
+}
+
+function changeInputValueBeta(val){
+    document.getElementById("numberBeta").value = isNaN(parseFloat(val, 3)) ? 0 : parseFloat(val, 10);
+    showValue1(val);
+}
