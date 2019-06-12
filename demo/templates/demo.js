@@ -4,6 +4,12 @@ var recorder;
 var microphone;
 var blob;
 
+var turbo = false;
+var isReadyToDisplay = false;
+var hasClicledTranscribe = false;
+
+var currentTranscription;
+
 var options = {
     fluid: true,
     controls: true,
@@ -36,6 +42,7 @@ var options = {
     }
 };
 
+
 function createPlayer(event) {
 
     player = videojs('myAudio', options, function() {
@@ -67,8 +74,14 @@ function createPlayer(event) {
         console.log('finished recording: ', player.recordedData);
         $('#record-button').text("Ny optagelse");
         sendAudio();
+
+        if (turbo){
+            setTimeout(transcribe, 500, false);
+        }
     });
 }
+
+
 
 $('#record-button').on('click', function(){
     if (player.record().isRecording()) {
@@ -84,7 +97,17 @@ $('#record-button').on('click', function(){
 });
 
 $('#submitAudio').on('click', function(){
-    transcribe(false);
+    if (turbo){
+        if (isReadyToDisplay){
+            $("#transcription").text(currentTranscription);
+            isReadyToDisplay = false;
+            hasClicledTranscribe = false;
+        } else {
+            hasClicledTranscribe = true;
+        }
+    } else {
+        transcribe(false);
+    }
 });
 
 function transcribe(use_google) {
@@ -99,7 +122,18 @@ function transcribe(use_google) {
         method: 'post',
         data: data,
         success: function(data){
-            $("#transcription").text(data.trans)
+            if(turbo){
+                if (hasClicledTranscribe){
+                    $("#transcription").text(data.trans);
+                    hasClicledTranscribe = false;
+                    isReadyToDisplay = false;
+                } else {
+                    isReadyToDisplay = true;
+                    currentTranscription = data.trans;
+                }
+            } else {
+                $("#transcription").text(data.trans)
+            }
         },
         error: function() {
             alert("Der gik desværre noget galt. Prøv venligst igen.");
@@ -166,3 +200,7 @@ function changeInputValueBeta(val){
     document.getElementById("numberBeta").value = isNaN(parseFloat(val, 3)) ? 0 : parseFloat(val, 10);
     showValue1(val);
 }
+
+$('#turbo').change(function () {
+    turbo = !turbo;
+});
