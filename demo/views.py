@@ -40,12 +40,12 @@ def update_config(request):
     alpha = request.POST["alpha"]
     beta = request.POST["beta"]
 
+    danspeech_model.update_config(lm=lm, model=model, alpha=alpha, beta=beta)
+
     return HttpResponse(status=204)
 
 
 def transcribe(request):
-    #print("WHY???")
-    #danspeech_model = DanSpeechDemo()
     transcription = danspeech_model.transcribe()
 
     return JsonResponse({

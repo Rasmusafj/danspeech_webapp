@@ -125,3 +125,5 @@ STATICFILES_DIRS = (
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'audio_files/')
+MODELS_DIR = os.path.abspath(os.path.join(BASE_DIR, "/Volumes/Karens harddisk/acoustic_models"))
+LMS_DIR = os.path.abspath(os.path.join(BASE_DIR, "/Volumes/Karens harddisk/lms/final_models_klm"))

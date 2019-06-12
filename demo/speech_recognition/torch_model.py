@@ -324,7 +324,7 @@ if __name__ == '__main__':
                         help='Path to model file created by training')
     args = parser.parse_args()
     package = torch.load(args.model_path, map_location=lambda storage, loc: storage)
-    model = DeepSpeech.load_model(args.model_path)
+    model = DanSpeech.load_model(args.model_path)
 
     print("Model name:         ", os.path.basename(args.model_path))
     print("DeepSpeech version: ", model.version)
