@@ -36,11 +36,19 @@ def preprocess_webm(request):
 
 def update_config(request):
     model = request.POST["model_choice"]
+    if model in ("0", "5"):
+        change_conv = 3
+    elif model == "4":
+        change_conv = 2
+    elif model == "3":
+        change_conv = 1
+    else:
+        change_conv = 0
     lm = request.POST["language_model"]
     alpha = request.POST["alpha"]
     beta = request.POST["beta"]
 
-    danspeech_model.update_config(lm=lm, model=model, alpha=alpha, beta=beta)
+    danspeech_model.update_config(lm=lm, model=model, alpha=alpha, beta=beta, change_conv=change_conv)
 
     return HttpResponse(status=204)
 

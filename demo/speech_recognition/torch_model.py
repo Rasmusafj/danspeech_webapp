@@ -143,7 +143,7 @@ class Lookahead(nn.Module):
 
 class DanSpeech(nn.Module):
     def __init__(self, rnn_type=nn.LSTM, labels="abc", rnn_hidden_size=768, nb_layers=5, audio_conf=None,
-                 bidirectional=True, context=20):
+                 bidirectional=True, context=20, change_conv=0):
         super(DanSpeech, self).__init__()
 
         # model metadata needed for serialization/deserialization
@@ -161,24 +161,66 @@ class DanSpeech(nn.Module):
         window_size = self.audio_conf.get("window_size", 0.02)
         num_classes = len(self.labels)
 
-        self.conv = MaskConv(nn.Sequential(
-            nn.Conv2d(1, 32, kernel_size=(41, 11), stride=(2, 2), padding=(20, 5)),
-            nn.BatchNorm2d(32),
-            nn.Hardtanh(0, 20, inplace=True),
-            nn.Conv2d(32, 32, kernel_size=(21, 11), stride=(2, 1), padding=(10, 5)),
-            nn.BatchNorm2d(32),
-            nn.Hardtanh(0, 20, inplace=True)
-
-            # -- uncomment to add third convolutional layer
-            #nn.Conv2d(32, 32, kernel_size=(21, 11), stride=(2, 1), padding=(10, 5)),
-            #nn.BatchNorm2d(32),
-            #nn.Hardtanh(0, 20, inplace=True)
-        ))
-        # Based on above convolutions and spectrogram size using conv formula (W - F + 2P)/ S+1
-        rnn_input_size = int(math.floor((sample_rate * window_size) / 2) + 1)
-        rnn_input_size = int(math.floor(rnn_input_size + 2 * 20 - 41) / 2 + 1)
-        rnn_input_size = int(math.floor(rnn_input_size + 2 * 10 - 21) / 2 + 1)
-        rnn_input_size *= 32
+        if change_conv == 0:
+            self.conv = MaskConv(nn.Sequential(
+                nn.Conv2d(1, 32, kernel_size=(41, 11), stride=(2, 2), padding=(20, 5)),
+                nn.BatchNorm2d(32),
+                nn.Hardtanh(0, 20, inplace=True),
+                nn.Conv2d(32, 32, kernel_size=(21, 11), stride=(2, 1), padding=(10, 5)),
+                nn.BatchNorm2d(32),
+                nn.Hardtanh(0, 20, inplace=True)
+            ))
+            # Based on above convolutions and spectrogram size using conv formula (W - F + 2P)/ S+1
+            rnn_input_size = int(math.floor((sample_rate * window_size) / 2) + 1)
+            rnn_input_size = int(math.floor(rnn_input_size + 2 * 20 - 41) / 2 + 1)
+            rnn_input_size = int(math.floor(rnn_input_size + 2 * 10 - 21) / 2 + 1)
+            rnn_input_size *= 32
+        elif change_conv == 1:
+            self.conv = MaskConv(nn.Sequential(
+                nn.Conv2d(1, 32, kernel_size=(41, 11), stride=(2, 2), padding=(20, 5)),
+                nn.BatchNorm2d(32),
+                nn.Hardtanh(0, 20, inplace=True),
+            ))
+            # Based on above convolutions and spectrogram size using conv formula (W - F + 2P)/ S+1
+            rnn_input_size = int(math.floor((sample_rate * window_size) / 2) + 1)
+            rnn_input_size = int(math.floor(rnn_input_size + 2 * 20 - 41) / 2 + 1)
+            rnn_input_size *= 32
+        elif change_conv == 2:
+            self.conv = MaskConv(nn.Sequential(
+                nn.Conv2d(1, 32, kernel_size=(41, 11), stride=(2, 2), padding=(20, 5)),
+                nn.BatchNorm2d(32),
+                nn.Hardtanh(0, 20, inplace=True),
+                nn.Conv2d(32, 32, kernel_size=(21, 11), stride=(2, 1), padding=(10, 5)),
+                nn.BatchNorm2d(32),
+                nn.Hardtanh(0, 20, inplace=True),
+                nn.Conv2d(32, 32, kernel_size=(21, 11), stride=(2,1), padding=(10,5)),
+                nn.BatchNorm2d(32),
+                nn.Hardtanh(0, 20, inplace=True)
+            ))
+            # Based on above convolutions and spectrogram size using conv formula (W - F + 2P)/ S+1
+            rnn_input_size = int(math.floor((sample_rate * window_size) / 2) + 1)
+            rnn_input_size = int(math.floor(rnn_input_size + 2 * 20 - 41) / 2 + 1)
+            rnn_input_size = int(math.floor(rnn_input_size + 2 * 10 - 21) / 2 + 1)
+            rnn_input_size = int(math.floor(rnn_input_size + 2 * 10 - 21) / 2 + 1)
+            rnn_input_size *= 32
+        elif change_conv == 3:
+            self.conv = MaskConv(nn.Sequential(
+                nn.Conv2d(1, 32, kernel_size=(41, 11), stride=(2, 2), padding=(20, 5)),
+                nn.BatchNorm2d(32),
+                nn.Hardtanh(0, 20, inplace=True),
+                nn.Conv2d(32, 32, kernel_size=(21, 11), stride=(2, 1), padding=(10, 5)),
+                nn.BatchNorm2d(32),
+                nn.Hardtanh(0, 20, inplace=True),
+                nn.Conv2d(32, 96, kernel_size=(21, 11), stride=(2,1), padding=(10,5)),
+                nn.BatchNorm2d(96),
+                nn.Hardtanh(0, 20, inplace=True)
+            ))
+            # Based on above convolutions and spectrogram size using conv formula (W - F + 2P)/ S+1
+            rnn_input_size = int(math.floor((sample_rate * window_size) / 2) + 1)
+            rnn_input_size = int(math.floor(rnn_input_size + 2 * 20 - 41) / 2 + 1)
+            rnn_input_size = int(math.floor(rnn_input_size + 2 * 10 - 21) / 2 + 1)
+            rnn_input_size = int(math.floor(rnn_input_size + 2 * 10 - 21) / 2 + 1)
+            rnn_input_size *= 96
 
         rnns = []
         rnn = BatchRNN(input_size=rnn_input_size, hidden_size=rnn_hidden_size, rnn_type=rnn_type,
@@ -239,10 +281,10 @@ class DanSpeech(nn.Module):
         return seq_len.int()
 
     @classmethod
-    def load_model(cls, path):
+    def load_model(cls, path, change_conv=0):
         package = torch.load(path, map_location=lambda storage, loc: storage)
         model = cls(rnn_hidden_size=package['hidden_size'], nb_layers=package['hidden_layers'],
-                    labels=package['labels'], audio_conf=package['audio_conf'],
+                    labels=package['labels'], audio_conf=package['audio_conf'], change_conv=change_conv,
                     rnn_type=supported_rnns[package['rnn_type']], bidirectional=package.get('bidirectional', True))
         model.load_state_dict(package['state_dict'])
         for x in model.rnns:
