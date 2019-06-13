@@ -53,8 +53,9 @@ lm_dict = {
 class DanSpeechDemo(object):
 
     def __init__(self):
-        self.model_path = "9RNN.pth"
-        self.lm = "dsl-5gram.klm"
+        self.model_path = "DanSpeech.pth"
+        self.change_conv = 3
+        self.lm = "greedy"
         self.alpha = 1.3
         self.beta = 0.2
 
@@ -80,17 +81,17 @@ class DanSpeechDemo(object):
             self.decoder = GreedyDecoder(labels=self.labels, blank_index=self.labels.index('_'))
 
     def update_model(self):
-        model = DanSpeech.load_model(os.path.join(settings.MODELS_DIR, self.model_path))
+        model = DanSpeech.load_model(os.path.join(settings.MODELS_DIR, self.model_path), change_conv=self.change_conv)
         self.model = model.to(self.device)
         self.model.eval()
         self.labels = self.model.labels
 
-
-    def update_config(self, lm, model, alpha, beta):
+    def update_config(self, lm, model, alpha, beta, change_conv):
         self.model_path = models_dict[model]
         self.lm = lm_dict[lm]
         self.alpha = float(alpha)
         self.beta = float(beta)
+        self.change_conv = change_conv
 
         self.update_model()
         self.update_decoder()
