@@ -92,8 +92,9 @@ class DanSpeechDemo(object):
         self.alpha = float(alpha)
         self.beta = float(beta)
 
-        self.update_decoder()
         self.update_model()
+        self.update_decoder()
+
 
     def parse_audio(self, recording):
         D = librosa.stft(recording, n_fft=self.n_fft, hop_length=self.hop_length,
