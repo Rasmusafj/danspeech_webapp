@@ -15,7 +15,7 @@ Note, you should definetly use chrome or firefox!
 * Run python manage.py runserver (this will launch the wepapp on port http://127.0.0.1:8000/
 
 ### Audio files
-The audio files are saved in .webm format. If i remember correctly, then they are saved as mono files with 44100kHz. So you may use e.g. ffmpeg to convert them to .wav files afterwards. I think `ffmpeg -y -i <file.webm> -acodec pcm_s16le -ac 1 -ar 16000 -f wav file.wav` will do the trick and if you are a linux/mac user, then you can do a bash forloop for the directory with the sound files to convert all the files at the same time.
+The audio files are saved in .webm format. If i remember correctly, then they are saved as mono files with 44100kHz. So you may use e.g. ffmpeg to convert them to .wav files afterwards. I think `ffmpeg -y -i file.webm -acodec pcm_s16le -ac 1 -ar 16000 -f wav file.wav` will do the trick and if you are a linux/mac user, then you can do a bash forloop for the directory with the sound files to convert all the files at the same time.
 
 ### Database and extraction
 The relation between the audiofile names and the transcriptions is stored in a simple sqllite database. After you're done recording, you need to extract the information from the database using sql scripts or by dumping the database to your preferred format using django (python manage.py dumpdata > db.json). Further preprocessing might be required depending on how you wish to use the data.
