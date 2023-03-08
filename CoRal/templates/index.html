@@ -153,13 +153,17 @@
                     vores
                     servere. Vi gemmer følgende data:
                 <ul>
-                    <li>Alder</li>
-                    <li>Køn</li>
-                    <li>Dialekt</li>
-                    <li>Accent</li>
-                    <li>Postnummer (nuværende bopæl)</li>
-                    <li>Postnummer (hvor du er vokset op)</li>
-                    <li>Etnisk oprindelse</li>
+                    <form id="metadata_form">
+                        Alder <input type="number" name="alder" min="0" max="100" required> <br>
+                        Køn <input type="text" name="køn" required> <br>
+                        Dialekt <input type="text" name="dialekt" required> <br>
+                        Accent <input type="text" name="accent" required> <br>
+                        Postnummer (nuværende bopæl) <input type="number" name="postnummer" min="1000" max="9999"
+                            required> <br>
+                        Postnummer (hvor du er vokset op) <input type="number" name="postnummer" min="1000" max="9999"
+                            required> <br>
+                        Etnisk oprindelse <input type="text" name="etnisk" required> <br>
+                    </form>
                 </ul>
                 </p>
                 <p> <input type="checkbox" id="accept" value="accepted"> Jeg er fuldt ud indforstået med <a
