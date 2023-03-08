@@ -1,7 +1,7 @@
 
 transcriptions = [];
 {% for transcription in transcriptions %}
-    transcriptions.push("{{ transcription }}");
+transcriptions.push("{{ transcription }}");
 {% endfor %}
 
 var current_trans = transcriptions.pop();
@@ -12,15 +12,17 @@ var recorder;
 var microphone;
 var blob;
 var audio = document.getElementById('safariAudio');
+var form = document.getElementById('metadata_form');
+var oldRecording = false;
 
 function captureMicrophone(callback) {
-    if(microphone) {
+    if (microphone) {
         callback(microphone);
         return;
     }
-    if(typeof navigator.mediaDevices === 'undefined' || !navigator.mediaDevices.getUserMedia) {
+    if (typeof navigator.mediaDevices === 'undefined' || !navigator.mediaDevices.getUserMedia) {
         alert('This browser does not supports WebRTC getUserMedia API.');
-        if(!!navigator.getUserMedia) {
+        if (!!navigator.getUserMedia) {
             alert('This browser seems supporting deprecated getUserMedia API.');
         }
     }
@@ -28,9 +30,9 @@ function captureMicrophone(callback) {
         audio: isEdge ? true : {
             echoCancellation: false
         }
-    }).then(function(mic) {
+    }).then(function (mic) {
         callback(mic);
-    }).catch(function(error) {
+    }).catch(function (error) {
         alert('Unable to capture your microphone. Please check console logs.');
         console.error(error);
     });
@@ -42,7 +44,7 @@ function replaceAudio(src) {
     newAudio.id = "safariAudio";
     newAudio.controls = true;
     newAudio.autoplay = false;
-    if(src) {
+    if (src) {
         newAudio.src = src;
     }
     parentNode.innerHTML = '';
@@ -52,7 +54,7 @@ function replaceAudio(src) {
 }
 
 function releaseMicrophone() {
-    if(microphone) {
+    if (microphone) {
         microphone.stop();
         microphone = null;
     }
@@ -62,10 +64,10 @@ function stopRecordingCallback() {
     replaceAudio(URL.createObjectURL(recorder.getBlob()));
     blob = null;
     blob = recorder.getBlob();
-    setTimeout(function() {
-        if(!audio.paused) return;
-        setTimeout(function() {
-            if(!audio.paused) return;
+    setTimeout(function () {
+        if (!audio.paused) return;
+        setTimeout(function () {
+            if (!audio.paused) return;
             audio.play();
         }, 1000);
 
@@ -126,7 +128,7 @@ if (!isSafari) {
 
 function createPlayer(event) {
 
-    player = videojs('myAudio', options, function() {
+    player = videojs('myAudio', options, function () {
         // print version information at startup
         var msg = 'Using video.js ' + videojs.VERSION +
             ' with videojs-record ' + videojs.getPluginVersion('record') +
@@ -134,34 +136,35 @@ function createPlayer(event) {
             ', wavesurfer.js ' + WaveSurfer.VERSION + ' and recordrtc ' +
             RecordRTC.version;
         videojs.log(msg);
-        });
+    });
 
     // error handling
-    player.on('deviceError', function() {
+    player.on('deviceError', function () {
         console.log('device error:', player.deviceErrorCode);
     });
-    player.on('error', function(element, error) {
+    player.on('error', function (element, error) {
         console.error(error);
     });
     // user clicked the record button and started recording
-    player.on('startRecord', function() {
+    player.on('startRecord', function () {
         console.log('started recording!');
         $('#record-button').text("Stop ");
     });
     // user completed recording and stream is available
-    player.on('finishRecord', function() {
+    player.on('finishRecord', function () {
         // the blob object contains the recorded data that
         // can be downloaded by the user, stored on server etc.
         console.log('finished recording: ', player.recordedData);
+        oldRecording = false;
         $('#record-button').text("Ny optagelse");
     });
 }
 
-$('#record-button').on('click', function(){
-    if(isSafari){
+$('#record-button').on('click', function () {
+    if (isSafari) {
         if (typeof recorder === 'undefined' || recorder.getState() === "stopped") {
             if (!microphone) {
-                captureMicrophone(function(mic) {
+                captureMicrophone(function (mic) {
                     microphone = mic;
 
                     replaceAudio();
@@ -187,7 +190,7 @@ $('#record-button').on('click', function(){
                 recorderType: StereoAudioRecorder
             };
 
-            if(recorder) {
+            if (recorder) {
                 recorder.destroy();
                 recorder = null;
             }
@@ -204,7 +207,7 @@ $('#record-button').on('click', function(){
         if (player.record().isRecording()) {
             player.record().stop();
         } else {
-            if (!player.record().stream){
+            if (!player.record().stream) {
                 alert("Tillad først optagelser ved at klikke på mikrofon ikonet i midten af optagervinduet")
             } else {
                 player.record().start();
@@ -213,22 +216,25 @@ $('#record-button').on('click', function(){
     }
 });
 
-function submitRecording(){
+function submitRecording() {
     var hasRecorded = false;
-    if (isSafari){
-        if (typeof recorder !== "undefined"){
+    if (isSafari) {
+        if (typeof recorder !== "undefined") {
             hasRecorded = true;
         }
     } else {
-        if (player.record().getDuration() !== 0){
+        if (player.record().getDuration() !== 0) {
             hasRecorded = true;
         }
     }
-    if (!hasRecorded){
+    console.log('hasRecorded: ' + hasRecorded);
+    console.log('oldRecording: ' + oldRecording);
+    console.log('(!hasRecorded || oldRecording)' + (!hasRecorded || oldRecording));
+    if (!hasRecorded || oldRecording) {
         alert("Du skal optage sætningen, før du kan sende den ind.")
     } else {
         var mobile_screen = screen.width < 800;
-        if (isSafari){
+        if (isSafari) {
             var myFile = new File([blob], 'audio.webm');
         } else {
             var myFile = new File([player.recordedData], 'audio.webm');
@@ -238,30 +244,34 @@ function submitRecording(){
         var data = new FormData();
         data.append('recorded_audio', myFile);
 
+        // Add the age from the form to data
+        data.append('age', form.age.value);
         data.append('transcription', current_trans);
         data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
         $.ajax({
             url: url,
             method: 'post',
             data: data,
-            success: function(data){
-                if(data.success){
+            success: function (data) {
+                if (data.success) {
                     alert("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
-                    if (transcriptions.length === 0){
+
+                    if (transcriptions.length === 0) {
                         alert("Du har optaget flere end hundrede optagelser. Du er en stjerne!")
-                    }else {
+                    } else {
                         current_trans = transcriptions.pop();
                         $('#transcription').text(current_trans);
                     }
                 }
             },
-            error: function() {
+            error: function () {
                 alert("Der gik desværre noget galt. Prøv venligst igen senere.");
             },
             cache: false,
             contentType: false,
             processData: false
-        });
+        })
+        oldRecording = true;
     }
 }
 
@@ -276,39 +286,39 @@ var span = document.getElementsByClassName("close")[0];
 modal.style.display = "block";
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
+span.onclick = function () {
+    modal.style.display = "none";
 };
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
 };
 
-$('#submitAudio').on('click', function(){
-    if(!accepted_legal){
+$('#submitAudio').on('click', function () {
+    if (!accepted_legal) {
         modal.style.display = "block";
     } else {
         submitRecording();
     }
 });
 
-if (!isSafari){
+if (!isSafari) {
     $('#safariAudio').hide();
 }
 
 function resetpage() {
     modal.style.display = "none";
-    if ($("#accept").prop("checked")){
+    if ($("#accept").prop("checked")) {
         accepted_legal = true;
         if (isSafari) {
-            if (typeof recorder !== "undefined"){
+            if (typeof recorder !== "undefined") {
                 submitRecording();
             }
         } else {
-            if (player.record().getDuration() !== 0){
+            if (player.record().getDuration() !== 0) {
                 submitRecording();
             }
         }
