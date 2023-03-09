@@ -238,7 +238,19 @@
                         Postnummer (hvor du er vokset op) <input type="number" name="zipcode_birth" min="1000"
                             max="9999" required> <br>
                         Etnisk oprindelse <input type="text" name="ethnicity" required> <br>
-                        Uddannelsesniveau <input type="text" name="education" required> <br>
+                        <label for="education">Uddannelsesniveau</label>
+                        <select name="education" id="education">
+                            <option value="grundskole">Grundskole</option>
+                            <option value="gymnasiel_uddannelse">Gymnasiele Uddannelse</option>
+                            <option value="erhvervsfaglig_uddannelse">Erhvervsfaglig Udannelse</option>
+                            <option value="adgangsgivende_uddannelsesforløb">Adgangsgivende Uddannelsesforløb</option>
+                            <option value="kort_videregående_uddannelse">Kort Videregående Uddannelse</option>
+                            <option value="mellemlang_videregående_uddannelse">Mellemlang Videregående Uddannelse
+                            </option>
+                            <option value="lang_videregående_uddannelse">Lang Videregående Uddannelse</option>
+                            <option value="bachelor_uddannelse">Bachelor Uddannelse</option>
+                            <option value="phd_og_forskeruddannelse">Ph.d. og forskeruddannelse</option>
+                        </select>
                         Beskæftigelse <input type="text" name="occupation" required> <br>
 
                     </form>
