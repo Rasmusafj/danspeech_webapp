@@ -246,7 +246,15 @@ function submitRecording() {
 
         // Add the age from the form to data
         data.append('age', form.age.value);
+        data.append('dialect', form.dialect.value);
+        data.append('gender', form.gender.value)
+        data.append('accent', form.accent.value)
+        data.append('zipcode_residence', form.zipcode_residence.value)
+        data.append('zipcode_birth', form.zipcode_birth.value)
+        data.append('education', form.education.value)
+        data.append('occupation', form.occupation.value)
         data.append('transcription', current_trans);
+        data.append('ethnicity', form.ethnicity.value);
         data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
         $.ajax({
             url: url,

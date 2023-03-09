@@ -154,15 +154,66 @@
                     servere. Vi gemmer følgende data:
                 <ul>
                     <form id="metadata_form">
-                        Alder <input type="number" name="alder" min="0" max="100" required> <br>
-                        Køn <input type="text" name="køn" required> <br>
-                        Dialekt <input type="text" name="dialekt" required> <br>
+                        Alder <input type="number" name="age" min="0" max="100" required> <br>
+                        <label for="gender">Køn</label>
+                        <select name="gender" id="gender">
+                            <option value="male">Mand (inklusiv trans-mand)</option>
+                            <option value="female">Kvinde (inklusiv trans-kvinde)</option>
+                            <option value="nonbinary">Non-binær</option>
+                        </select>
+                        <label for="dialect">Dialekt</label>
+                        <select name="dialect" id="dialect">
+                            <option value="Amagermål">Amagermål</option>
+                            <option value="Nordsjællandsk">Nordsjællandsk</option>
+                            <option value="Nordvestsjællandsk">Nordvestsjællandsk</option>
+                            <option value="Sydvestsjællandsk">Sydvestsjællandsk</option>
+                            <option value="Østsjællandsk">Østsjællandsk</option>
+                            <option value="Sydsjællandsk (sydligt sydsjællandsk)">Sydsjællandsk (sydligt sydsjællandsk)
+                            </option>
+                            <option value="Vendsysselsk (m. Hanherred og Læsø)">Vendsysselsk (m. Hanherred og Læsø)
+                            </option>
+                            <option value="Himmerlandsk">Himmerlandsk</option>
+                            <option value="Ommersysselsk">Ommersysselsk</option>
+                            <option value="Djurslandsk (Nord-, Syddjurs m. Nord- og Sydsamsø, Anholt)">Djurslandsk
+                                (Nord-, Syddjurs m. Nord- og Sydsamsø, Anholt)</option>
+                            <option value="Midtøstjysk">Midtøstjysk</option>
+                            <option value="Østmønskvestmønsk">Østmønskvestmønsk</option>
+                            <option value="Nordfalstersk">Nordfalstersk</option>
+                            <option value="Sydfalstersk">Sydfalstersk</option>
+                            <option value="Lollandsk">Lollandsk</option>
+                            <option value="Vestlig sønderjysk (m. Mandø og Rømø)">Vestlig sønderjysk (m. Mandø og Rømø)
+                            </option>
+                            <option value="Østligt sønderjysk (m. Als)">Østligt sønderjysk (m. Als)</option>
+                            <option value="Mellemslesvisk">Mellemslesvisk</option>
+                            <option value="Angelmål">Angelmål</option>
+                            <option value="Fjoldemål">Fjoldemål</option>
+                            <option value="Østfynsk">Østfynsk</option>
+                            <option value="Vestfynsk (nordvest-, sydvestfynsk)">Vestfynsk (nordvest-, sydvestfynsk)
+                            </option>
+                            <option value="Sydfynsk">Sydfynsk</option>
+                            <option value="Langelandsk">Langelandsk</option>
+                            <option value="Tåsingsk (m. Thurø)">Tåsingsk (m. Thurø)</option>
+                            <option value="Ærøsk (m. Lyø, Avernakø, Strynø, Birkholm, Drejø)">Ærøsk (m. Lyø, Avernakø,
+                                Strynø, Birkholm, Drejø)</option>
+                            <option value="Thybomål">Thybomål</option>
+                            <option value="Morsingmål">Morsingmål</option>
+                            <option value="Sallingmål">Sallingmål</option>
+                            <option value="Hardsysselsk">Hardsysselsk</option>
+                            <option value="Fjandbomål">Fjandbomål</option>
+                            <option value="Sydvestjysk (m. Fanø)">Sydvestjysk (m. Fanø)</option>
+                            <option value="Sydøstjysk">Sydøstjysk</option>
+                            <option value="Vestjysk">Vestjysk</option>
+                            <option value="Østjysk                            ">Østjysk </option>
+                        </select>
                         Accent <input type="text" name="accent" required> <br>
-                        Postnummer (nuværende bopæl) <input type="number" name="postnummer" min="1000" max="9999"
+                        Postnummer (nuværende bopæl) <input type="number" name="zipcode_residence" min="1000" max="9999"
                             required> <br>
-                        Postnummer (hvor du er vokset op) <input type="number" name="postnummer" min="1000" max="9999"
-                            required> <br>
-                        Etnisk oprindelse <input type="text" name="etnisk" required> <br>
+                        Postnummer (hvor du er vokset op) <input type="number" name="zipcode_birth" min="1000"
+                            max="9999" required> <br>
+                        Etnisk oprindelse <input type="text" name="ethnicity" required> <br>
+                        Uddannelsesniveau <input type="text" name="education" required> <br>
+                        Beskæftigelse <input type="text" name="occupation" required> <br>
+
                     </form>
                 </ul>
                 </p>
