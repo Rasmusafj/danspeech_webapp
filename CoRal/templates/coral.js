@@ -14,6 +14,7 @@ var blob;
 var audio = document.getElementById('safariAudio');
 var form = document.getElementById('metadata_form');
 var oldRecording = false;
+var currentDateTime = new Date().toLocaleString();
 
 function captureMicrophone(callback) {
     if (microphone) {
@@ -242,6 +243,10 @@ function submitRecording() {
         data.append('recorded_audio', myFile);
 
         // Add the age from the form to data
+        data.append('room_dimensions', form.room_dimensions.value);
+        data.append('address', form.address.value);
+        data.append('background_noise', form.background_noise.value);
+        data.append('noise', form.noise.value);
         data.append('age', form.age.value);
         data.append('dialect', form.dialect.value);
         data.append('gender', form.gender.value)
@@ -252,6 +257,8 @@ function submitRecording() {
         data.append('education', form.education.value)
         data.append('occupation', form.occupation.value)
         data.append('transcription', current_trans);
+        data.append('experiment_start_time', currentDateTime);
+        data.append('submitted_time', new Date().toLocaleString());
         data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
         $.ajax({
             url: url,
@@ -337,6 +344,10 @@ function resetpage() {
 function checkform() {
     form_valid = false;
     if (
+        checkDimensions(form.room_dimensions.value) &&
+        checkAddress(form.address.value) &&
+        checkBackgroundNoise(form.background_noise.value) &&
+        checkNoise(form.noise.value) &&
         checkAge(form.age.value) &&
         checkZipcode(form.zipcode_birth.value) &&
         checkZipcode(form.zipcode_residence.value) &&
@@ -351,6 +362,54 @@ function checkform() {
         form_valid = true;
     }
     return form_valid;
+}
+
+function checkDimensions(dimensions) {
+    if (dimensions == "Ikke valgt") {
+        alert("Du skal vælge rummets størrelse, på formen (højde,bredde,længde), hvor højde, bredde og længde er tal");
+        return false;
+    } else if (dimensions.split(",").length != 3) {
+        alert("Du skal vælge rummets størrelse, på formen (højde,bredde,længde), hvor højde, bredde og længde er tal");
+        return false;
+    } else {
+        for (var i = 0; i < dimensions.split(",").length; i++) {
+            if (isNaN(parseInt(dimensions.split(",")[i]))) {
+                alert("Du skal vælge rummets størrelse, på formen (højde,bredde,længde), hvor højde, bredde og længde er tal");
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+function checkAddress(address) {
+    if (address == "Ikke valgt" || address == "") {
+        alert("Du skal indtaste hvor optagelsen finder sted");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkBackgroundNoise(background_noise) {
+    if (background_noise == "Ikke valgt") {
+        alert("Du skal vælge baggrundslarm");
+        return false;
+    } else if (isNaN(parseInt(background_noise))) {
+        alert("Baggrundslarm skal være et tal");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkNoise(noise) {
+    if (noise == "ikke_valgt") {
+        alert("Du skal vælge hvilken slags støj du optager under");
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function checkAge(age) {

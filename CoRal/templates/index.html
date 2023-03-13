@@ -154,6 +154,18 @@
                     servere. Vi gemmer følgende data:
                 <ul>
                     <form id="metadata_form">
+                        Dimensioner af optagelsesrummet (højde,bredde,længde) <input type="text" name="room_dimensions"
+                            value="Ikke valgt" required> <br>
+                        Adresse på optagelsesstedet <input type="text" name="address" value="Ikke valgt" required> <br>
+                        Baggrundsstøj (dB) <input type="number" name="background_noise" value="Ikke valgt" required>
+                        <br>
+                        <label for="noise">Støj type</label>
+                        <select name="noise" id="noise">
+                            <option value="ikke_valgt">Ikke valgt</option>
+                            <option value="ingen">Ingen</option>
+                            <option value="trafik">Trafik</option>
+                            <option value="human">Mennesker</option>
+                        </select>
                         Alder <input type="number" name="age" min="0" max="100" required> <br>
                         <label for="gender">Køn</label>
                         <select name="gender" id="gender">
