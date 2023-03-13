@@ -41,7 +41,7 @@ def save_audio(request):
     zipcode_birth = request.POST.get('zipcode_birth')
     education = request.POST.get('education')
     occupation = request.POST.get('occupation')
-    ethnicity = request.POST.get('ethnicity')
+    birth_place = request.POST.get('birth_place')
     recording = Recording()
     recording.recorded_file = audio_file
     recording.transcription = transcription
@@ -53,7 +53,7 @@ def save_audio(request):
     recording.zipcode_birth = zipcode_birth
     recording.education = education
     recording.occupation = occupation
-    recording.ethnicity = ethnicity
+    recording.birth_place = birth_place
     recording.save()
 
     return JsonResponse({

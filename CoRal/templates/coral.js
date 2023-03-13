@@ -251,10 +251,10 @@ function submitRecording() {
         data.append('accent', form.accent.value)
         data.append('zipcode_residence', form.zipcode_residence.value)
         data.append('zipcode_birth', form.zipcode_birth.value)
+        data.append('birth_place', form.birth_place.value)
         data.append('education', form.education.value)
         data.append('occupation', form.occupation.value)
         data.append('transcription', current_trans);
-        data.append('ethnicity', form.ethnicity.value);
         data.append('csrfmiddlewaretoken', "{{ csrf_token }}");
         $.ajax({
             url: url,
@@ -318,8 +318,8 @@ if (!isSafari) {
 }
 
 function resetpage() {
-    modal.style.display = "none";
-    if ($("#accept").prop("checked")) {
+    if (checkform() && $("#accept").prop("checked")) {
+        modal.style.display = "none";
         accepted_legal = true;
         if (isSafari) {
             if (typeof recorder !== "undefined") {
@@ -330,8 +330,119 @@ function resetpage() {
                 submitRecording();
             }
         }
-
     } else {
-        accepted_legal = false;
+        if (!$("#accept").prop("checked")) {
+            alert("Du skal acceptere betingelserne for at kunne sende optagelser ind.")
+        }
+    }
+}
+
+function checkform() {
+    form_valid = false;
+    if (
+        checkAge(form.age.value) &&
+        checkZipcode(form.zipcode_birth.value) &&
+        checkZipcode(form.zipcode_residence.value) &&
+        checkGender(form.gender.value) &&
+        checkDialect(form.dialect.value) &&
+        checkAccent(form.accent.value) &&
+        checkEducation(form.education.value) &&
+        checkOccupation(form.occupation.value) &&
+        checkPlaceOfBirth(form.birth_place.value) &&
+        checkBornInEitherDenmarkOrNot(form.zipcode_birth.value, form.birth_place.value)
+    ) {
+        form_valid = true;
+    }
+    return form_valid;
+}
+
+function checkAge(age) {
+
+    if (age < 0 || age > 100 || age == "") {
+        alert("Alder skal være mellem 0 og 100");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkZipcode(zipcode) {
+    if (zipcode == "Ikke født i Danmark") {
+        return true
+    }
+    zipcode = parseInt(zipcode);
+
+    if (isNaN(zipcode)) {
+        alert("Postnummer skal være et tal")
+        return false;
+    }
+    if (zipcode < 999 || zipcode > 10000) {
+        alert("Postnummer skal være på 4 cifre, og imellem 1000 og 9999");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkGender(gender) {
+    if (gender == "ikke_valgt") {
+        alert("Du skal vælge køn");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkDialect(dialect) {
+    if (dialect == "ikke_valgt") {
+        alert("Du skal vælge dialekt");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkAccent(accent) {
+    if (accent == "Ikke valgt") {
+        alert("Du skal vælge accent");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkEducation(education) {
+    if (education == "ikke_valgt") {
+        alert("Du skal vælge uddannelse");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkOccupation(occupation) {
+    if (occupation == "Ikke valgt" && occupation.length > 4) {
+        alert("Du skal vælge erhverv");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkPlaceOfBirth(place_of_birth) {
+    if (place_of_birth == "Ikke valgt") {
+        alert("Du skal vælge fødested");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkBornInEitherDenmarkOrNot(zipcode_birth, birth_place) {
+    if (zipcode_birth == "Ikke født i Danmark" && birth_place == "Danmark") {
+        alert("Du kan ikke være født i Danmark og have postnummeret 'Ikke født i Danmark'");
+        return false;
+    } else {
+        return true;
     }
 }
