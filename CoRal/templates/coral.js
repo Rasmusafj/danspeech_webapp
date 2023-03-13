@@ -227,9 +227,6 @@ function submitRecording() {
             hasRecorded = true;
         }
     }
-    console.log('hasRecorded: ' + hasRecorded);
-    console.log('oldRecording: ' + oldRecording);
-    console.log('(!hasRecorded || oldRecording)' + (!hasRecorded || oldRecording));
     if (!hasRecorded || oldRecording) {
         alert("Du skal optage sætningen, før du kan sende den ind.")
     } else {
