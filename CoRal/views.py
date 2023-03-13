@@ -33,6 +33,10 @@ def save_audio(request):
     """Save recorded audio blob sent by user."""
     audio_file = request.FILES.get('recorded_audio')
     transcription = request.POST.get("transcription")
+    room_dimensions = request.POST.get("room_dimensions")
+    address = request.POST.get("address")
+    background_noise = request.POST.get("background_noise")
+    noise = request.POST.get("noise")
     age = request.POST.get("age")
     dialect = request.POST.get('dialect')
     gender = request.POST.get('gender')
@@ -43,6 +47,10 @@ def save_audio(request):
     occupation = request.POST.get('occupation')
     birth_place = request.POST.get('birth_place')
     recording = Recording()
+    recording.room_dimensions = room_dimensions
+    recording.address = address
+    recording.background_noise = background_noise
+    recording.noise = noise
     recording.recorded_file = audio_file
     recording.transcription = transcription
     recording.age = age
