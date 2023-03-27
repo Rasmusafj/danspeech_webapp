@@ -39,9 +39,10 @@ def save_audio(request):
     noise = request.POST.get("noise")
     age = request.POST.get("age")
     dialect = request.POST.get('dialect')
+    languages = request.POST.get('languages')
     gender = request.POST.get('gender')
     accent = request.POST.get('accent')
-    zipcode_residence = request.POST.get('zipcode_residence')
+    zipcode_school = request.POST.get('zipcode_school')
     zipcode_birth = request.POST.get('zipcode_birth')
     education = request.POST.get('education')
     occupation = request.POST.get('occupation')
@@ -54,10 +55,11 @@ def save_audio(request):
     recording.recorded_file = audio_file
     recording.transcription = transcription
     recording.age = age
+    recording.languages = languages
     recording.dialect = dialect
     recording.gender = gender
     recording.accent = accent
-    recording.zipcode_residence = zipcode_residence
+    recording.zipcode_school = zipcode_school
     recording.zipcode_birth = zipcode_birth
     recording.education = education
     recording.occupation = occupation

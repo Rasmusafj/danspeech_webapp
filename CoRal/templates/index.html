@@ -154,10 +154,12 @@
                     servere. Vi gemmer følgende data:
                 <ul>
                     <form id="metadata_form">
-                        Dimensioner af optagelsesrummet (højde,bredde,længde) <input type="text" name="room_dimensions"
-                            value="Ikke valgt" required> <br>
-                        Adresse på optagelsesstedet <input type="text" name="address" value="Ikke valgt" required> <br>
-                        Baggrundsstøj (dB) <input type="number" name="background_noise" value="Ikke valgt" required>
+                        <b>Dimensioner af optagelsesrummet (højde,bredde,længde)</b> <input type="text"
+                            name="room_dimensions" value="Ikke valgt" required> <br>
+                        <b>Adresse på optagelsesstedet</b> <input type="text" name="address" value="Ikke valgt"
+                            required> <br>
+                        <b>Baggrundsstøj (dB)</b> <input type="number" name="background_noise" value="Ikke valgt"
+                            required>
                         <br>
                         <label for="noise">Støj type</label>
                         <select name="noise" id="noise">
@@ -166,7 +168,7 @@
                             <option value="trafik">Trafik</option>
                             <option value="human">Mennesker</option>
                         </select>
-                        Alder <input type="number" name="age" min="0" max="100" required> <br>
+                        <b>Alder</b> <input type="number" name="age" min="0" max="100" required> <br>
                         <label for="gender">Køn</label>
                         <select name="gender" id="gender">
                             <option value="ikke_valgt">Ikke valgt</option>
@@ -179,6 +181,7 @@
                             <option value="ikke_valgt">Ikke valgt</option>
                             <optgroup label="Sjællandsk">
                                 <option value="Sjællandsk">Sjællandsk</option>
+                                <option value="Amagermål">Københavnsk</option>
                                 <option value="Amagermål">Amagermål</option>
                                 <option value="Nordsjællandsk">Nordsjællandsk</option>
                                 <option value="Nordvestsjællandsk">Nordvestsjællandsk</option>
@@ -246,10 +249,9 @@
                                 <option value="Bornholmsk">Bornholmsk</option>
                             </optgroup>
                         </select>
-                        <label for="accent">Accent</label>
+                        <label for="Modersmål">Modersmål</label>
                         <select name="accent" id="accent">
                             <option value="Ikke valgt">Ikke valgt</option>
-                            <option value="Ingen Accent">Ingen accent</option>
                             <option value="Afghanistan">Afghanistan</option>
                             <option value="Albania">Albania</option>
                             <option value="Algeria">Algeria</option>
@@ -446,9 +448,12 @@
                             <option value="Zambia">Zambia</option>
                             <option value="Zimbabwe">Zimbabwe</option>
                         </select>
-                        Postnummer (nuværende bopæl) <input type="number" name="zipcode_residence" min="1000" max="9999"
-                            required> <br>
-                        Postnummer (hvor du er vokset op) <input type="text" name="zipcode_birth"
+                        <br>
+                        <b>Hvilke sprog taler du</b> <input type="text" name="languages" required>
+                        <br>
+                        <b>Postnummer (hvor har du gået i folkeskole)</b> <input type="text" name="zipcode_school"
+                            value="Ikke gået i folkeskole i Danmark" required> <br>
+                        <b>Postnummer (hvor du er vokset op)</b> <input type="text" name="zipcode_birth"
                             value="Ikke født i Danmark" required> <br>
                         <label for="birth_place">Fødselssted</label>
                         <select name="birth_place" id="birth_place">

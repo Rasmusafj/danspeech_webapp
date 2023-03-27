@@ -15,6 +15,7 @@ var audio = document.getElementById('safariAudio');
 var form = document.getElementById('metadata_form');
 var oldRecording = false;
 var currentDateTime = new Date().toLocaleString();
+var numOfRecordings = 0;
 
 function captureMicrophone(callback) {
     if (microphone) {
@@ -248,10 +249,11 @@ function submitRecording() {
         data.append('background_noise', form.background_noise.value);
         data.append('noise', form.noise.value);
         data.append('age', form.age.value);
+        data.append('languages', form.languages.value);
         data.append('dialect', form.dialect.value);
         data.append('gender', form.gender.value)
         data.append('accent', form.accent.value)
-        data.append('zipcode_residence', form.zipcode_residence.value)
+        data.append('zipcode_school', form.zipcode_school.value)
         data.append('zipcode_birth', form.zipcode_birth.value)
         data.append('birth_place', form.birth_place.value)
         data.append('education', form.education.value)
@@ -267,13 +269,12 @@ function submitRecording() {
             success: function (data) {
                 if (data.success) {
                     alert("Succes! Tak for dit bidrag. Du er velkommen til at sende os flere optagelser!");
-
-                    if (transcriptions.length === 0) {
-                        alert("Du har optaget flere end hundrede optagelser. Du er en stjerne!")
-                    } else {
-                        current_trans = transcriptions.pop();
-                        $('#transcription').text(current_trans);
+                    numOfRecordings += 1;
+                    if (numOfRecordings % 20 === 0) {
+                        alert("Tag en kort pause, og drik en tår vand.")
                     }
+                    current_trans = transcriptions.pop();
+                    $('#transcription').text(current_trans);
                 }
             },
             error: function () {
@@ -350,10 +351,11 @@ function checkform() {
         checkNoise(form.noise.value) &&
         checkAge(form.age.value) &&
         checkZipcode(form.zipcode_birth.value) &&
-        checkZipcode(form.zipcode_residence.value) &&
+        checkZipcode(form.zipcode_school.value) &&
         checkGender(form.gender.value) &&
         checkDialect(form.dialect.value) &&
         checkAccent(form.accent.value) &&
+        checkLanguages(form.languages.value) &&
         checkEducation(form.education.value) &&
         checkOccupation(form.occupation.value) &&
         checkPlaceOfBirth(form.birth_place.value) &&
@@ -385,6 +387,15 @@ function checkDimensions(dimensions) {
 function checkAddress(address) {
     if (address == "Ikke valgt" || address == "") {
         alert("Du skal indtaste hvor optagelsen finder sted");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkLanguages(languages) {
+    if (languages == "Ikke valgt" || languages == "") {
+        alert("Du skal indtaste hvilke sprog du taler");
         return false;
     } else {
         return true;
@@ -423,7 +434,7 @@ function checkAge(age) {
 }
 
 function checkZipcode(zipcode) {
-    if (zipcode == "Ikke født i Danmark") {
+    if (zipcode == "Ikke født i Danmark" || zipcode == "Ikke gået i folkeskole i Danmark") {
         return true
     }
     zipcode = parseInt(zipcode);
