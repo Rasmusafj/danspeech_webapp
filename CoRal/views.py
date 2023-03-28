@@ -18,7 +18,7 @@ def index(request):
     random.shuffle(transcriptions)
 
     content = {
-        "transcriptions": transcriptions[:150],
+        "transcriptions": transcriptions[:2000],
     }
 
     return HttpResponse(template.render(content, request))
