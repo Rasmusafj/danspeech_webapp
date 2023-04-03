@@ -1,3 +1,4 @@
+import torch
 from datasets import load_dataset
 from tqdm import tqdm
 from transformers import pipeline, AutoTokenizer
@@ -7,6 +8,8 @@ dataset = load_dataset("olm/wikipedia", language="da", date="20230320", split="t
 
 # Initialize the sentiment classification model and tokenizer
 model_name = "alexandrainst/da-offensive-detection-base"
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
 model = pipeline("sentiment-analysis", model=model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 word_tokenizer = AutoTokenizer.from_pretrained("vesteinn/DanskBERT")
@@ -51,17 +54,39 @@ def chunk_text(text):
     return chunk_texts
 
 # Process each article in the dataset
-chunks_to_keep = []
+
+# Keep track of the number of articles processed
+# read file article_count.txt
+# if file does not exist, create it and set article_count to 0
+# else, set article_count to the number in the file
+with open("article_count.txt", "r") as f:
+    processed_article_count = int(f.read())
+
+current_article_count = 0
 for article in tqdm(dataset):
+    # Skip the article if it has already been processed
+    if current_article_count < processed_article_count:
+        current_article_count += 1
+        continue
+
+    chunks_to_keep = []
     # Split the text into chunks
     chunks = chunk_text(article["text"])
+
     # Classify the sentiment of each chunk
-    for j, chunk in enumerate(chunks):
-        result = model(chunk)
-        if not result[0]["label"] == "Offensive":
+    results = model(chunks)
+
+    # Keep the chunks that are not offensive
+    for chunk, result in zip(chunks, results):
+        if not result["label"] == "Offensive":
             # Keep the chunk if it is not offensive
             chunks_to_keep.append(chunk)
     
     # Save the chunks to a text file
     with open("da_wiki.txt", "a") as f:
         f.write("\n".join(chunks_to_keep))
+    
+    # Increment the article count and save it to the file
+    processed_article_count += 1
+    with open("article_count.txt", "w") as f:
+        f.write(str(processed_article_count))
