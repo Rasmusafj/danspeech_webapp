@@ -4,3 +4,4 @@ transformers==4.27.3
 mwparserfromhell==0.6.4
 multiprocess==0.70.13
 torch==2.0.0
+scipy==1.10.1
