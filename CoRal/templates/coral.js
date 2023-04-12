@@ -114,7 +114,7 @@ var options = {
             maxLength: 20,
             debug: false,
             autoMuteDevice: true,
-            audioSampleRate: 22050,
+            audioSampleRate: 24000,
             //desiredSampRate: 16000,
             audioChannels: 1,
         },
@@ -188,7 +188,7 @@ $('#record-button').on('click', function () {
                 type: 'audio',
                 numberOfAudioChannels: 2,
                 checkForInactiveTracks: true,
-                desiredSampRate: 22050,
+                desiredSampRate: 24000,
                 recorderType: StereoAudioRecorder
             };
 
