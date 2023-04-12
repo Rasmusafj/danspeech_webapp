@@ -47,6 +47,8 @@ def save_audio(request):
     education = request.POST.get('education')
     occupation = request.POST.get('occupation')
     birth_place = request.POST.get('birth_place')
+    experiment_start_time = request.POST.get('experiment_start_time')
+    submitted_time = request.POST.get('submitted_time')
     recording = Recording()
     recording.room_dimensions = room_dimensions
     recording.address = address
@@ -64,6 +66,8 @@ def save_audio(request):
     recording.education = education
     recording.occupation = occupation
     recording.birth_place = birth_place
+    recording.experiment_start_time = experiment_start_time
+    recording.submitted_time = submitted_time
     recording.save()
 
     return JsonResponse({
