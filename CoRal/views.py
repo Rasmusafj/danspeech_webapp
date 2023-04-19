@@ -34,6 +34,8 @@ def save_audio(request):
     audio_file = request.FILES.get('recorded_audio')
     transcription = request.POST.get("transcription")
     room_dimensions = request.POST.get("room_dimensions")
+    name = request.POST.get("name")
+    email = request.POST.get("email")
     address = request.POST.get("address")
     background_noise = request.POST.get("background_noise")
     noise = request.POST.get("noise")

@@ -4,6 +4,8 @@ from django.db import models
 class Recording(models.Model):
     recorded_file = models.FileField()
     transcription = models.CharField(max_length=1000)
+    name = models.CharField(max_length=1000)
+    email = models.CharField(max_length=1000)
     room_dimensions = models.CharField(max_length=1000)
     address = models.CharField(max_length=1000)
     background_noise = models.CharField(max_length=1000)

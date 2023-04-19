@@ -245,6 +245,8 @@ function submitRecording() {
 
         // Add the age from the form to data
         data.append('room_dimensions', form.room_dimensions.value);
+        data.append('name', form.name.value);
+        data.append('email', form.email.value);
         data.append('address', form.address.value);
         data.append('background_noise', form.background_noise.value);
         data.append('noise', form.noise.value);
@@ -349,6 +351,8 @@ function checkform() {
         checkAddress(form.address.value) &&
         checkBackgroundNoise(form.background_noise.value) &&
         checkNoise(form.noise.value) &&
+        checkName(form.name.value) &&
+        checkEmail(form.email.value) &&
         checkAge(form.age.value) &&
         checkZipcode(form.zipcode_birth.value) &&
         checkZipcode(form.zipcode_school.value) &&
@@ -364,6 +368,28 @@ function checkform() {
         form_valid = true;
     }
     return form_valid;
+}
+
+function checkName(name) {
+    if (name == "" || name == "Ikke valgt") {
+        alert("Du skal indtaste dit navn");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkEmail(email) {
+    if (email == "" || email == "Ikke valgt") {
+        alert("Du skal indtaste din email");
+        return false;
+    }
+    if (email.indexOf("@") == -1) {
+        alert("Du skal indtaste en gyldig email");
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function checkDimensions(dimensions) {
