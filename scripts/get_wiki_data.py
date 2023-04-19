@@ -97,7 +97,7 @@ def main():
             f.close()
 
         # Restart the script if it has processed 100 articles
-        if processed_article_count % 100 == 0:
+        if processed_article_count % 1000 == 0:
             print("Restarting script...")
             os.execv(sys.executable, ['python3'] + sys.argv)
 
