@@ -52,6 +52,8 @@ def save_audio(request):
     experiment_start_time = request.POST.get('experiment_start_time')
     submitted_time = request.POST.get('submitted_time')
     recording = Recording()
+    recording.name = name
+    recording.email = email
     recording.room_dimensions = room_dimensions
     recording.address = address
     recording.background_noise = background_noise
