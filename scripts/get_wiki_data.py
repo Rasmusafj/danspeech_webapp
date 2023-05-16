@@ -88,6 +88,7 @@ def main():
         # Save the chunks to a text file
         with open("scripts/da_wiki.txt", "a") as f:
             f.write("\n".join(chunks_to_keep))
+            f.write("\n")
             f.close()
         
         # Increment the article count and save it to the file
